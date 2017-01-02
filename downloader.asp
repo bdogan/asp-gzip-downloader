@@ -11,7 +11,7 @@ Function Download(Uri, FileName, ByRef WithGZIP)
 	xmlHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
 	xmlHTTP.setRequestHeader "Accept", "text/xml;charset=ISO-8859-9"
 	xmlHTTP.setRequestHeader "Accept-Charset", "ISO-8859-9"
-	If (WithGZIP <> False) Then xmlHTTP.setRequestHeader "Accept-Encoding", "gzip"
+	If (WithGZIP = True) Then xmlHTTP.setRequestHeader "Accept-Encoding", "gzip"
 	xmlHTTP.send()
 	
 	If (xmlHttp.Status <> "200" OR Len(xmlHTTP.ResponseBody) = 0) Then Set xmlHTTP = Nothing : Exit Function
@@ -37,6 +37,8 @@ Function Download(Uri, FileName, ByRef WithGZIP)
 		Dim WshShell : Set WshShell = CreateObject("WScript.Shell")		
 		Dim Result : Result = WshShell.Run(gZipExec & " -q -f -d " & Server.Mappath(FileName), 0, True)
 		If Result = 0 Then Download = True
+	Else
+		WithGZIP = False
 	End If
 	
 	Set xmlHTTP = Nothing
